@@ -1,0 +1,21 @@
+# 운영체제 파일
+.DS_Store
+Thumbs.db
+
+# 에디터 파일
+.vscode/
+.idea/
+*.sublime-*
+
+# 로그 파일
+*.log
+npm-debug.log*
+
+# 임시 파일
+*.tmp
+*.temp
+*~
+
+# 환경 변수 파일 (비디오 URL 보호)
+.env
+.env.local
