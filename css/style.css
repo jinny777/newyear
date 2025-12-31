@@ -1,0 +1,608 @@
+/* ============================================
+   2026 새해 인사 웹페이지 스타일시트
+   - 모바일 최적화
+   - 터치 인터페이스 개선
+   - 반응형 디자인
+   ============================================ */
+
+/* ============================================
+   전역 스타일 및 리셋
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 
+                 'Malgun Gothic', '맑은 고딕', 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #f5f5f0;
+}
+
+/* ============================================
+   헤더 영역 (URL 숨김용)
+   ============================================ */
+.page-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.greeting-title {
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+}
+
+.greeting-title a {
+    display: inline-block;
+    padding: 20px 30px;
+    margin: 20px;
+    background: linear-gradient(135deg, #D4AF37, #FFD700);
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+    pointer-events: auto;
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.greeting-title a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(212, 175, 55, 0.5);
+    background: linear-gradient(135deg, #FFD700, #D4AF37);
+}
+
+.greeting-title a:active {
+    transform: translateY(0);
+}
+
+/* 공유 버튼 표시 옵션 (원하면 활성화) */
+.page-header.show-share {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ============================================
+   배경 이미지 컨테이너
+   ============================================ */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/thumbnail.jpg');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: brightness(0.95);
+    z-index: -1;
+}
+
+/* ============================================
+   메인 콘텐츠 컨테이너
+   ============================================ */
+.content-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    padding-bottom: 60px;
+    z-index: 1;
+}
+
+/* ============================================
+   비디오 래퍼 및 플레이어
+   ============================================ */
+.video-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 700px;
+    aspect-ratio: 16 / 9;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+    animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: center;
+    will-change: transform, opacity;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.video-player {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    background-color: #000;
+}
+
+/* ============================================
+   재생 버튼 오버레이
+   ============================================ */
+.play-button-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.3s ease;
+    opacity: 1;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
+.play-button-overlay:hover,
+.play-button-overlay:focus {
+    transform: translate(-50%, -50%) scale(1.1);
+    outline: none;
+}
+
+.play-button-overlay:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.play-button-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.play-icon {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+/* ============================================
+   비디오 컨트롤
+   ============================================ */
+.video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, 
+                rgba(0, 0, 0, 0.85) 0%, 
+                rgba(0, 0, 0, 0.6) 60%,
+                transparent 100%);
+    padding: 12px 16px 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 5;
+}
+
+.video-wrapper:hover .video-controls,
+.video-wrapper.show-controls .video-controls {
+    opacity: 1;
+}
+
+/* ============================================
+   진행률 바
+   ============================================ */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: height 0.2s ease;
+}
+
+.progress-container:hover {
+    height: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #D4AF37, #FFD700);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.1s linear;
+    position: relative;
+}
+
+.progress-handle {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background-color: #FFD700;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.progress-container:hover .progress-handle {
+    opacity: 1;
+}
+
+/* ============================================
+   컨트롤 버튼들
+   ============================================ */
+.controls-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.controls-left,
+.controls-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 48px;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.control-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+.control-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.time-display {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+/* ============================================
+   모바일 최적화 (태블릿)
+   ============================================ */
+@media (max-width: 1024px) {
+    .video-wrapper {
+        width: 85%;
+        max-width: 800px;
+    }
+    
+    .background-container {
+        background-position: center center;
+    }
+}
+
+/* ============================================
+   모바일 최적화 (스마트폰 가로)
+   ============================================ */
+@media (max-width: 768px) {
+    .content-container {
+        padding: 15px;
+        padding-bottom: 50px;
+    }
+    
+    .video-wrapper {
+        width: 95%;
+        max-width: 600px;
+        border-radius: 12px;
+    }
+    
+    .play-button-overlay {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .greeting-title a {
+        font-size: 20px;
+        padding: 16px 24px;
+        margin: 15px;
+    }
+    
+    .control-btn {
+        min-width: 48px;
+        min-height: 48px;
+        padding: 10px;
+    }
+    
+    .control-btn svg {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .time-display {
+        font-size: 13px;
+    }
+    
+    .video-controls {
+        padding: 10px 12px 12px;
+    }
+    
+    .progress-container {
+        height: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .progress-container:hover {
+        height: 8px;
+    }
+}
+
+/* ============================================
+   모바일 최적화 (스마트폰 세로)
+   ============================================ */
+@media (max-width: 600px) {
+    .content-container {
+        padding: 10px;
+        padding-bottom: 40px;
+    }
+    
+    .video-wrapper {
+        width: 92%;
+        max-width: 500px;
+        border-radius: 10px;
+    }
+    
+    .background-container {
+        background-position: center top;
+        background-size: contain;
+    }
+    
+    .play-button-overlay {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .greeting-title a {
+        font-size: 18px;
+        padding: 14px 20px;
+        margin: 12px;
+    }
+}
+
+/* ============================================
+   작은 스마트폰 최적화
+   ============================================ */
+@media (max-width: 400px) {
+    .content-container {
+        padding: 8px;
+        padding-bottom: 35px;
+    }
+    
+    .video-wrapper {
+        width: 95%;
+        max-width: 380px;
+        border-radius: 8px;
+    }
+    
+    .play-button-overlay {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .greeting-title a {
+        font-size: 16px;
+        padding: 12px 18px;
+        margin: 10px;
+        border-radius: 8px;
+    }
+    
+    .control-btn {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 8px;
+    }
+    
+    .control-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .time-display {
+        font-size: 12px;
+    }
+    
+    .controls-bottom {
+        gap: 8px;
+    }
+    
+    .controls-left,
+    .controls-right {
+        gap: 8px;
+    }
+    
+    .video-controls {
+        padding: 8px 10px 10px;
+    }
+}
+
+/* ============================================
+   가로 모드 최적화 (모바일)
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .content-container {
+        padding: 5px;
+    }
+    
+    .video-wrapper {
+        width: 95%;
+        max-height: 80vh;
+    }
+    
+    .background-container {
+        background-position: center center;
+    }
+    
+    .play-button-overlay {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .video-controls {
+        padding: 6px 10px 8px;
+    }
+    
+    .progress-container {
+        height: 6px;
+        margin-bottom: 8px;
+    }
+    
+    .control-btn {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 6px;
+    }
+    
+    .control-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .time-display {
+        font-size: 11px;
+    }
+}
+
+/* ============================================
+   터치 디바이스 특정 스타일
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .video-controls {
+        opacity: 1;
+    }
+    
+    .progress-handle {
+        width: 16px;
+        height: 16px;
+        opacity: 1;
+    }
+    
+    .control-btn {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* ============================================
+   고해상도 디스플레이 최적화
+   ============================================ */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .video-wrapper {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+}
+
+/* ============================================
+   다크 모드 지원
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+    }
+}
+
+/* ============================================
+   애니메이션 감소 설정
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .play-button-overlay {
+        animation: none;
+    }
+    
+    .video-wrapper {
+        animation: none;
+    }
+}
+
+/* ============================================
+   프린트 스타일
+   ============================================ */
+@media print {
+    .video-controls,
+    .play-button-overlay {
+        display: none;
+    }
+    
+    .video-wrapper {
+        box-shadow: none;
+    }
+}
